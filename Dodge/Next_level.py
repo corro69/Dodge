@@ -20,7 +20,7 @@ pygame.joystick.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 #screen = pygame.display.set_mode((WIDTH,HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption("MyPy")
-icon = pygame.image.load("icon.png")
+icon = pygame.image.load("images/icon.png")
 pygame.display.set_icon(icon)
 clock = pygame.time.Clock()
 
@@ -30,9 +30,13 @@ for i in range(0, pygame.joystick.get_count()):
     joysticks[-1].init()
     print("Detected Joystick '", joysticks[-1].get_name(), "'")
 
-kenny = pygame.image.load("kenny.png")
+kenny = pygame.image.load("images/kenny.png")
 
-pickle_in = open("topscore.dat", "rb")
+pickle_in = open("data/score.dat", "rb")
+score_save = pickle.load(pickle_in)
+score = score_save
+
+pickle_in = open("data/topscore.dat", "rb")
 topscore_save = pickle.load(pickle_in)
 topscore = topscore_save
 
@@ -42,18 +46,18 @@ topscore = topscore_save
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("back.png")
+        self.image = pygame.image.load("images/back.png")
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
 
-bg = Background('background_image.png', [0, 0])
+bg = Background('images/background_image.png', [0, 0])
 
 #drawing surfaces
 
 
 def draw_text(surf, text, size, x, y):
-    font = pygame.font.Font('Gretoon.ttf', 20)
+    font = pygame.font.Font('fonts/Gretoon.ttf', 20)
     text = font.render("Score: " + str(score), True, RED)
     surf.blit(text, (20, 10))
 
@@ -64,22 +68,22 @@ def text_objects(text, font):
 
 
 def message_display(text):
-    largeText = pygame.font.Font('SnackerComic.ttf', 115)
+    largeText = pygame.font.Font('fonts/SnackerComic.ttf', 115)
     TextSurf, TextRect = text_objects(text, largeText)
     TextRect.center = ((WIDTH/2), (HEIGHT/2))
     screen.blit(TextSurf, TextRect)
 
 
 def draw_topscore(surf, text, size, x, y):
-    font = pygame.font.Font('Gretoon.ttf', 20)
+    font = pygame.font.Font('fonts/Gretoon.ttf', 20)
     text = font.render("TopScore: " + str(topscore), True, RED)
     surf.blit(text, (750, 10))
 
 
-button1 = pygame.image.load("button1.png")
-button2 = pygame.image.load("button2.png")
-quit1 = pygame.image.load("quit1.png")
-quit2 = pygame.image.load("quit2.png")
+button1 = pygame.image.load("images/button1.png")
+button2 = pygame.image.load("images/button2.png")
+quit1 = pygame.image.load("images/quit1.png")
+quit2 = pygame.image.load("images/quit2.png")
 
 #BUTTON
 
@@ -117,18 +121,15 @@ while pause:
 
         screen.blit(bg.image, bg.rect)
         screen.blit(kenny, (425, 300))
-        largeText = pygame.font.Font('SnackerComic.ttf', 115)
+        largeText = pygame.font.Font('fonts/SnackerComic.ttf', 115)
         TextSurf, TextRect = text_objects("Level Cleared", largeText)
         TextRect.center = ((WIDTH/2), (HEIGHT/3))
         screen.blit(TextSurf, TextRect)
 
         draw_topscore(screen, str(topscore_save), 20, 550, 10)
-
- #       button(200, 500, 100, 39, button1, button2, "play")
- #       button(700, 500, 100, 39, quit1, quit2, "quit")
-        
+        draw_text(screen, str(score), 20, WIDTH, HEIGHT)
         
         pygame.display.update()
         clock.tick(15)
-        time.sleep(15)
+        time.sleep(5)
         import Level_2

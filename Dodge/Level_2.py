@@ -31,6 +31,11 @@ for i in range(0, pygame.joystick.get_count()):
     joysticks[-1].init()
     print("Detected Joystick '", joysticks[-1].get_name(), "'")
 
+#score
+pickle_in = open("data/score.dat", "rb")
+score_save = pickle.load(pickle_in)
+score = score_save
+
 #TopScore
 pickle_in = open("data/topscore.dat", "rb")
 topscore_save = pickle.load(pickle_in)
@@ -105,7 +110,7 @@ def timer(t):
     while t:
         mins, secs = divmod(t, 60)
         timer = '{:02d}:{:02d}'.format(mins, secs)
-        print(timer, end="\r")
+ #       print(timer, end="\r")
         time.sleep(.001)
         t -= 1
  #       new_time -= 1
@@ -486,7 +491,7 @@ for i in range(1):
     all_sprites.add(o)
     oneUp.add(o)
 
-score = 0
+score = score_save
 
 #game loop
 
@@ -628,6 +633,11 @@ while running:
         print(topscore_save)
         pickle_out.close()
 
+    x = score
+    score_save = int(x)
+    pickle_out = open("data/score.dat", "wb")
+    pickle.dump(score_save, pickle_out)
+    pickle_out.close()
 #Draw/ render
     screen.fill(BLACK)
     screen.blit(bg.image, bg.rect)
@@ -639,8 +649,7 @@ while running:
     draw_lives(screen, WIDTH/2 - 50, 30, player.lives, lives_img)
     draw_timer(screen, str(nt), 70, 400, 10)
     pygame.display.flip()
-
-#   nt -= 1
+    nt -= 1
 
 
 pygame.quit()

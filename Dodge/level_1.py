@@ -91,7 +91,13 @@ pause = False
 
 #drawing surfaces
 
-
+def score_save():
+     x = score
+    score_save = int(x)
+    pickle_out = open("data/score.dat", "wb")
+    pickle.dump(score_save, pickle_out)
+    print(score_save)
+    pickle_out.close()
 
 import time
 t = 10
@@ -344,7 +350,7 @@ class Alien(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT + 10 or self.rect.left < -25 or self.rect.right > WIDTH + 20:
             self.rect.x = random.randrange(WIDTH - self.rect.width)
             self.rect.y = random.randrange(-100, -40)
-            self.speedy = random.randrange(1, 8)
+            self.speedy = random.randrange(1, 5)
             self.speedx = random.randrange(-3, 3)
 #BULLET
 class Bullet(pygame.sprite.Sprite):
@@ -465,6 +471,7 @@ while running:
     topscore = topscore_save
 
     if nt == 0:
+        score_save()
         Next_level()
 
 #    bgX -= 1.4
