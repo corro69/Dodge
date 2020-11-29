@@ -116,4 +116,4 @@ while pause:
         pygame.display.update()
         clock.tick(15)
         time.sleep(5)
-        import Level_2
+        import Level_5

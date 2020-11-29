@@ -4,7 +4,7 @@ import os
 x = 100
 
 topscore_save = int(x)
-pickle_out = open("topscore.dat","wb")
+pickle_out = open("data/topscore.dat","wb")
 pickle.dump(topscore_save, pickle_out)
 pickle_out.close()
 

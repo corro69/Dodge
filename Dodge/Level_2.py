@@ -101,10 +101,8 @@ pause = False
 t = 10
 nt = 3000
 
-
 def new_time():
     nt -= .1
-
 
 def timer(t):
     while t:
@@ -115,24 +113,20 @@ def timer(t):
         t -= 1
  #       new_time -= 1
 
-
 def draw_timer(surf, text, size, x, y):
         font = pygame.font.Font('fonts/Gretoon.ttf', 15)
         text = font.render("Time Remaining: " + str(nt), True, RED)
         surf.blit(text, (400, 70))
-
 
 def draw_text(surf, text, size, x, y):
     font = pygame.font.Font('fonts/Gretoon.ttf', 20)
     text = font.render("Score: " + str(score), True, RED)
     surf.blit(text, (20, 10))
 
-
 def draw_topscore(surf, text, size, x, y):
     font = pygame.font.Font('fonts/Gretoon.ttf', 20)
     text = font.render("TopScore: " + str(topscore), True, RED)
     surf.blit(text, (750, 10))
-
 
 def draw_shield_bar(surf, x, y, pct):
     if pct < 0:
@@ -145,7 +139,6 @@ def draw_shield_bar(surf, x, y, pct):
     pygame.draw.rect(surf, GREEN, fill_rect)
     pygame.draw.rect(surf, WHITE, outline_rect, 3)
 
-
 def draw_lives(surf, x, y, lives, img):
     for i in range(lives):
         img_rect = img.get_rect()
@@ -153,11 +146,9 @@ def draw_lives(surf, x, y, lives, img):
         img_rect.y = y
         surf.blit(img, img_rect)
 
-
 def text_objects(text, font):
     textSurface = font.render(text, True, RED)
     return textSurface, textSurface.get_rect()
-
 
 def message_display(text):
     largeText = pygame.font.Font('fonts/SnackerComic.ttf', 115)
@@ -172,47 +163,38 @@ def message_display(text):
     game_loop()
 
 #CRASH
-
-
 def crash():
     pause = True
     import Crash
-
 
 def paused():
   #  pause = True
     import Pause
 
-
 def unpause():
     global pause
     pause = False
-
 
 def game_loop():
     global pause
     pause = False
 
 #Next Level
-
-
 def Next_level():
     pause = True
-    import Next_level
+    import Next_level_2
     paused()
+
 #BACKGROUND
-
-
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("images/back.png")
+        self.image = pygame.image.load("images/galaxy+X.tga")
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
 
-bg = Background('images/background_image.png', [0, 0])
-
+bg = Background('images/galaxy+X.tga', [0, 0])
 
 class Star_field(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
@@ -226,26 +208,20 @@ class Star_field(pygame.sprite.Sprite):
         self.rect.y += self.speedy
         self.speedy = 2
 
-#bgX = Star_field()
-
-
 def new_asteroids():
     m = Asteroid()
     all_sprites.add(m)
     asteroids.add(m)
-
 
 def new_aliens():
     a = Alien()
     all_sprites.add(a)
     aliens.add(a)
 
-
 def new_powerUp():
     p = PowerUp()
     all_sprites.add(p)
     powerUp.add(p)
-
 
 def new_oneUp():
     o = OneUp()
@@ -253,8 +229,6 @@ def new_oneUp():
     oneUp.add(o)
 
 #PLAYER
-
-
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -320,8 +294,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (WIDTH/2, HEIGHT + 200)
 
 #ASTEROIDS
-
-
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -359,8 +331,6 @@ class Asteroid(pygame.sprite.Sprite):
             self.speedy = random.randrange(1, 8)
 
 #ALIEN
-
-
 class Alien(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -380,9 +350,8 @@ class Alien(pygame.sprite.Sprite):
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(1, 8)
             self.speedx = random.randrange(-3, 3)
+
 #BULLET
-
-
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -396,7 +365,6 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y += self.speedy
         if self.rect.bottom < 0:
             self.kill
-
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, size):
@@ -420,9 +388,8 @@ class Explosion(pygame.sprite.Sprite):
                 center = self.rect.center
                 self.image = explosion_anim[self.size][self.frame]
                 self.rect.center = center
+
 #Bonus Ups
-
-
 class PowerUp(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -441,7 +408,6 @@ class PowerUp(pygame.sprite.Sprite):
             self.rect.x = random.randrange(WIDTH - self.rect.width)
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(1, 10)
-
 
 class OneUp(pygame.sprite.Sprite):
     def __init__(self):
@@ -474,11 +440,11 @@ player = Player()
 all_sprites.add(bgX)
 all_sprites.add(player)
 
-for i in range(8):
+for i in range(6):
     m = Asteroid()
     all_sprites.add(m)
     asteroids.add(m)
-for i in range(5):
+for i in range(4):
     a = Alien()
     all_sprites.add(a)
     aliens.add(a)
@@ -507,10 +473,6 @@ while running:
 
     if nt == 0:
         Next_level()
-
-#    bgX -= 1.4
-#    if bgX < bg.get_height() * -1:
-#        bgX = bg.get_height()
 
 #process input (events)
     for event in pygame.event.get():
@@ -650,7 +612,6 @@ while running:
     draw_timer(screen, str(nt), 70, 400, 10)
     pygame.display.flip()
     nt -= 1
-
 
 pygame.quit()
 quit()

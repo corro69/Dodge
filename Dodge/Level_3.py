@@ -1,3 +1,4 @@
+
 import pygame
 import random
 import time
@@ -30,6 +31,11 @@ for i in range(0, pygame.joystick.get_count()):
     joysticks[-1].init()
     print("Detected Joystick '", joysticks[-1].get_name(), "'")
 
+#score
+pickle_in = open("data/score.dat", "rb")
+score_save = pickle.load(pickle_in)
+score = score_save
+
 #TopScore
 pickle_in = open("data/topscore.dat", "rb")
 topscore_save = pickle.load(pickle_in)
@@ -56,7 +62,8 @@ hud_img = pygame.image.load("images/hud_p1Alt.png")
 lives_img = pygame.transform.scale(hud_img, (30, 30)).convert_alpha()
 
 asteroid_img = []
-asteroid_list = ["images/asteroid1.png", "images/asteroid2.png", "images/asteroid3.png", "images/asteroid4.png"]
+asteroid_list = ["images/asteroid1.png", "images/asteroid2.png",
+                 "images/asteroid3.png", "images/asteroid4.png"]
 for img in asteroid_list:
     asteroid_img.append(pygame.image.load(img).convert_alpha())
 
@@ -90,30 +97,22 @@ player_rect = player_Img.get_rect()
 pause = False
 
 #drawing surfaces
-def score_save():
-    x = score
-    score_save = int(x)
-    pickle_out = open("data/score.dat", "wb")
-    pickle.dump(score_save, pickle_out)
-    print(score_save)
-    pickle_out.close()
 
-import time
 t = 10
 nt = 3000
 
 def new_time():
     nt -= .1
-    
+
 def timer(t):
     while t:
         mins, secs = divmod(t, 60)
         timer = '{:02d}:{:02d}'.format(mins, secs)
-        print (timer, end="\r")
-        time.sleep(.001)           
+ #       print(timer, end="\r")
+        time.sleep(.001)
         t -= 1
  #       new_time -= 1
-        
+
 def draw_timer(surf, text, size, x, y):
         font = pygame.font.Font('fonts/Gretoon.ttf', 15)
         text = font.render("Time Remaining: " + str(nt), True, RED)
@@ -183,17 +182,19 @@ def game_loop():
 #Next Level
 def Next_level():
     pause = True
-    import Next_level
+    import Next_level_3
     paused()
 
 #BACKGROUND
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("images/back.png")
+        self.image = pygame.image.load("images/galaxy-X.tga")
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
-bg = Background('images/background_image.png', [0, 0])
+
+
+bg = Background('images/galaxy-X.tga', [0, 0])
 
 class Star_field(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
@@ -206,8 +207,6 @@ class Star_field(pygame.sprite.Sprite):
     def update(self):
         self.rect.y += self.speedy
         self.speedy = 2
-
-#bgX = Star_field()
 
 def new_asteroids():
     m = Asteroid()
@@ -305,7 +304,7 @@ class Asteroid(pygame.sprite.Sprite):
      #   pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = random.randrange(WIDTH - self.rect.width)
         self.rect.y = random.randrange(-100, -40)
-        self.speedy = random.randrange(1, 2)
+        self.speedy = random.randrange(1, 8)
         self.speedx = random.randrange(-3, 3)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
@@ -329,7 +328,7 @@ class Asteroid(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT + 10 or self.rect.left < -25 or self.rect.right > WIDTH + 20:
             self.rect.x = random.randrange(WIDTH - self.rect.width)
             self.rect.y = random.randrange(-100, -40)
-            self.speedy = random.randrange(1, 8)
+            self.speedy = random.randrange(1, 10)
 
 #ALIEN
 class Alien(pygame.sprite.Sprite):
@@ -341,7 +340,7 @@ class Alien(pygame.sprite.Sprite):
     #    pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = random.randrange(WIDTH - self.rect.width)
         self.rect.y = random.randrange(-100, -40)
-        self.speedy = random.randrange(1, 3)
+        self.speedy = random.randrange(1, 5)
         self.speedx = random.randrange(-3, 3)
 
     def update(self):
@@ -349,7 +348,7 @@ class Alien(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT + 10 or self.rect.left < -25 or self.rect.right > WIDTH + 20:
             self.rect.x = random.randrange(WIDTH - self.rect.width)
             self.rect.y = random.randrange(-100, -40)
-            self.speedy = random.randrange(1, 5)
+            self.speedy = random.randrange(1, 8)
             self.speedx = random.randrange(-3, 3)
 
 #BULLET
@@ -389,6 +388,7 @@ class Explosion(pygame.sprite.Sprite):
                 center = self.rect.center
                 self.image = explosion_anim[self.size][self.frame]
                 self.rect.center = center
+
 #Bonus Ups
 class PowerUp(pygame.sprite.Sprite):
     def __init__(self):
@@ -428,6 +428,7 @@ class OneUp(pygame.sprite.Sprite):
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(1, 10)
 
+
 bgX = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 asteroids = pygame.sprite.Group()
@@ -439,11 +440,11 @@ player = Player()
 all_sprites.add(bgX)
 all_sprites.add(player)
 
-for i in range(4):
+for i in range(8):
     m = Asteroid()
     all_sprites.add(m)
     asteroids.add(m)
-for i in range(2):
+for i in range(6):
     a = Alien()
     all_sprites.add(a)
     aliens.add(a)
@@ -456,20 +457,21 @@ for i in range(1):
     all_sprites.add(o)
     oneUp.add(o)
 
-score = 0
+score = score_save
 
 #game loop
+
 running = True
 while running:
-        
+    timer(int(t))
+
     clock.tick(FPS)
-    
+
     pickle_in = open("data/topscore.dat", "rb")
     topscore_save = pickle.load(pickle_in)
     topscore = topscore_save
 
     if nt == 0:
-        score_save()
         Next_level()
 
 #process input (events)
@@ -506,7 +508,7 @@ while running:
 
 #Update
     all_sprites.update()
-   
+
 #check if player hit
     hits = pygame.sprite.spritecollide(
         player, asteroids, True, pygame.sprite.collide_circle)
@@ -593,6 +595,11 @@ while running:
         print(topscore_save)
         pickle_out.close()
 
+    x = score
+    score_save = int(x)
+    pickle_out = open("data/score.dat", "wb")
+    pickle.dump(score_save, pickle_out)
+    pickle_out.close()
 #Draw/ render
     screen.fill(BLACK)
     screen.blit(bg.image, bg.rect)
@@ -604,7 +611,7 @@ while running:
     draw_lives(screen, WIDTH/2 - 50, 30, player.lives, lives_img)
     draw_timer(screen, str(nt), 70, 400, 10)
     pygame.display.flip()
-    nt -=1
+    nt -= 1
 
 pygame.quit()
 quit()

@@ -1,10 +1,10 @@
 import pickle
 import os
 
-x = 100
+x = 0
 
 score_save = int(x)
-pickle_out = open("score.dat","wb")
+pickle_out = open("data/score.dat","wb")
 pickle.dump(score_save, pickle_out)
 pickle_out.close()
 
